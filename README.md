@@ -1,2 +1,3 @@
 Simple Arcade Shooter in Jetpack Compose
-https://youtube.com/shorts/uzrzJvJSHgI?feature=share
+
+[![Watch the video](https://youtube.com/shorts/uzrzJvJSHgI?feature=share)

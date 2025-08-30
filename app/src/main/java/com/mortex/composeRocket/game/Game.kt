@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -84,9 +85,9 @@ fun Game(padding: PaddingValues) {
     }
 
     var gameOver by remember { mutableStateOf(false) }
-    var score by remember { mutableStateOf(0) }
+    var score by remember { mutableIntStateOf(0) }
     var shooting by remember { mutableStateOf(false) }
-    var tiltAngle by remember { mutableStateOf(0f) }
+    var tiltAngle by remember { mutableFloatStateOf(0f) }
 
     val bulletPainter = painterResource(id = R.drawable.ic_bullet)
     val rocketBitmap = ImageBitmap.imageResource(id = R.drawable.ic_red_rocket)
@@ -107,7 +108,11 @@ fun Game(padding: PaddingValues) {
                 stars = stars.map {
                     val newY = it.y + it.speed
                     if (newY > screenHeight) {
-                        Star((0..screenWidth.toInt()).random().toFloat(), 0f, it.speed) // respawn at top
+                        Star(
+                            (0..screenWidth.toInt()).random().toFloat(),
+                            0f,
+                            it.speed
+                        ) // respawn at top
                     } else {
                         it.copy(y = newY)
                     }
@@ -262,7 +267,7 @@ fun Game(padding: PaddingValues) {
                         colorFilter = when {
                             isHitFlash -> ColorFilter.tint(Red)
                             ob.fast -> ColorFilter.lighting(
-                                multiply = Color.White,
+                                multiply = White,
                                 add = Color.Gray
                             ) // fast ones tinted
                             else -> null

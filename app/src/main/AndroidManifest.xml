@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".game.core.RocketApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,7 +14,7 @@
         android:theme="@style/Theme.FoundationMVVM"
         tools:targetApi="31">
         <activity
-            android:name="com.mortex.composeRocket.game.RocketActivity"
+            android:name="com.mortex.composeRocket.game.presentation.RocketActivity"
             android:exported="true"
             android:theme="@style/Theme.FoundationMVVM">
             <intent-filter>
@@ -22,6 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

@@ -4,13 +4,15 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp.id)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.dagger.hilt.android)
 }
 android {
-    namespace = "com.mortex.ComposeRocket"
+    namespace = "com.mortex.composeRocket"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.mortex.github2"
+        applicationId = "com.mortex.composeRocket"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -57,6 +59,20 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(platform(libs.androidx.compose.bom))
+
+    implementation(libs.androidx.navigation.compose)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(platform(libs.firebaseBom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.play.services.auth)
+    implementation(libs.analytics)
+
+    implementation(libs.coil.compose)
+
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.android.gradle.plugin)
+    implementation(libs.hilt.navigation.compose)
+    ksp(libs.dagger.android.processor)
+    ksp(libs.hilt.compiler)
 }

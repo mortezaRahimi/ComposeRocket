@@ -1,4 +1,4 @@
-package com.mortex.composeRocket.game.presentation.components.screen.login
+package com.mortex.composeRocket.game.domain.auth.model
 
 data class AuthUiState(
     val loading: Boolean = false,

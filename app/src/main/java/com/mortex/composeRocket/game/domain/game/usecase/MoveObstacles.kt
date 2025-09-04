@@ -1,7 +1,7 @@
-package com.mortex.composeRocket.game.domain.usecase
+package com.mortex.composeRocket.game.domain.game.usecase
 
 import android.graphics.RectF
-import com.mortex.composeRocket.game.domain.model.Obstacle
+import com.mortex.composeRocket.game.domain.game.model.Obstacle
 
 object MoveObstacles {
     operator fun invoke(obstacles: List<Obstacle>, h: Int) =

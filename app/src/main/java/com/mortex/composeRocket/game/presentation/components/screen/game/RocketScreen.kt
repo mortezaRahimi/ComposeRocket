@@ -1,16 +1,24 @@
-package com.mortex.composeRocket.game.presentation.components.screen.main
+package com.mortex.composeRocket.game.presentation.components.screen.game
 
 import android.graphics.Paint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -34,17 +43,25 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.size.Scale
 import com.mortex.composeRocket.R
-import com.mortex.composeRocket.game.domain.model.GameCfg
+import com.mortex.composeRocket.game.domain.game.model.GameCfg
+import com.mortex.composeRocket.game.presentation.components.screen.menu.GameMenu
 
 @Composable
-fun RocketScreen(viewModel: RocketViewModel = hiltViewModel()) {
+fun RocketScreen(
+    viewModel: RocketViewModel = hiltViewModel(),
+    onLogout: () -> Unit,
+) {
+
     val ui by viewModel.state.collectAsState()
 
     // Load images once; ViewModel only exposes drawable IDs
@@ -58,8 +75,12 @@ fun RocketScreen(viewModel: RocketViewModel = hiltViewModel()) {
 
     var measured by remember { mutableStateOf(false) }
 
+    BackHandler(enabled = true) {
+        if (!ui.gameOver)
+            viewModel.openMenu()
+    }
     Box(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Black)
             .onSizeChanged {
@@ -68,18 +89,23 @@ fun RocketScreen(viewModel: RocketViewModel = hiltViewModel()) {
                     viewModel.onViewportReady(it.width, it.height)
                 }
             }
-            .pointerInput(ui.gameOver) {
-                if (!ui.gameOver) {
-                    detectDragGestures(
-                        onDrag = { change, drag ->
-                            change.consume()
-                            viewModel.onDrag(drag.x, drag.y)
-                        },
-                        onDragEnd = { viewModel.onDragEnd() },
-                        onDragCancel = { viewModel.onDragEnd() }
-                    )
-                }
-            }
+            // Only capture gestures when NOT paused/menu
+            .then(
+                if (!ui.isPaused && !ui.isMenuOpen)
+                    Modifier.pointerInput(ui.gameOver) {
+                        if (!ui.gameOver) {
+                            detectDragGestures(
+                                onDrag = { change, drag ->
+                                    change.consume()
+                                    viewModel.onDrag(drag.x, drag.y)
+                                },
+                                onDragEnd = { viewModel.onDragEnd() },
+                                onDragCancel = { viewModel.onDragEnd() }
+                            )
+                        }
+                    }
+                else Modifier
+            )
     ) {
         // Canvas render only
         Canvas(Modifier.fillMaxSize()) {
@@ -91,14 +117,20 @@ fun RocketScreen(viewModel: RocketViewModel = hiltViewModel()) {
                 rotate(ui.tiltAngle, pivot = Offset(ui.rocketX, ui.rocketY)) {
                     drawImage(
                         rocketBitmap,
-                        dstOffset = IntOffset((ui.rocketX - GameCfg.ROCKET_HALF).toInt(), (ui.rocketY - GameCfg.ROCKET_HALF).toInt()),
+                        dstOffset = IntOffset(
+                            (ui.rocketX - GameCfg.ROCKET_HALF).toInt(),
+                            (ui.rocketY - GameCfg.ROCKET_HALF).toInt()
+                        ),
                         dstSize = IntSize(200, 200)
                     )
                 }
             } else {
                 drawContext.canvas.nativeCanvas.drawText(
                     "💀", ui.rocketX, ui.rocketY,
-                    Paint().apply { textSize = 120f; color = android.graphics.Color.YELLOW; textAlign = Paint.Align.CENTER }
+                    Paint().apply {
+                        textSize = 120f; color = android.graphics.Color.YELLOW; textAlign =
+                        Paint.Align.CENTER
+                    }
                 )
             }
 
@@ -131,21 +163,61 @@ fun RocketScreen(viewModel: RocketViewModel = hiltViewModel()) {
             }
         }
 
-        // HUD
-        Text(
-            "Score: ${ui.score}",
-            color = White,
-            fontSize = 24.sp,
-            modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp)
-        )
+        // HUD: score + pause button
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Card(
+                shape = CircleShape, modifier = Modifier
+                    .size(45.dp)
+            ) {
+                AsyncImage(
+                    modifier = Modifier.fillMaxSize(),
+                    model = ui.user?.photoUrl ?: "",
+                    contentDescription = ui.user?.email,
+                    contentScale = ContentScale.Fit
+                )
+            }
+            Text("Score: ${ui.score}", color = White, fontSize = 20.sp)
+        }
 
-        if (ui.gameOver) {
-            Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("GAME OVER", color = Red, fontSize = 36.sp)
-                Spacer(Modifier.height(16.dp))
-                Button(onClick = viewModel::onReplay) { Text("Replay") }
+        // Pause button (hidden when already showing menu or game over)
+        if (!ui.gameOver) {
+            FilledTonalButton(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .align(Alignment.TopEnd), onClick = viewModel::openMenu
+            ) {
+                Text("MENU")
             }
         }
+
+        // Game Over overlay (unchanged)
+        if (ui.gameOver) {
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("GAME OVER", color = Red, fontSize = 36.sp)
+                Spacer(Modifier.height(16.dp))
+                Button(onClick = { viewModel.restartGame() }) { Text("Replay") }
+            }
+        }
+
+        // --- Animated Menu overlay ---
+        GameMenu(
+            visible = ui.isMenuOpen,
+            onResume = viewModel::closeMenu,
+            onRestart = viewModel::restartGame,
+            onExit = {
+                viewModel.onExit()
+                onLogout()
+            }
+        )
     }
 }
 

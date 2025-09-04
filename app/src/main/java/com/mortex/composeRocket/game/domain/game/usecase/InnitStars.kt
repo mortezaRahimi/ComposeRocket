@@ -1,6 +1,6 @@
-package com.mortex.composeRocket.game.domain.usecase
+package com.mortex.composeRocket.game.domain.game.usecase
 
-import com.mortex.composeRocket.game.domain.model.Star
+import com.mortex.composeRocket.game.domain.game.model.Star
 
 object InitStars {
     operator fun invoke(w: Int, h: Int, count: Int = 50) =

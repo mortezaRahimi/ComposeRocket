@@ -1,8 +1,8 @@
-package com.mortex.composeRocket.game.domain.usecase
+package com.mortex.composeRocket.game.domain.game.usecase
 
-import com.mortex.composeRocket.game.domain.model.Bullet
-import com.mortex.composeRocket.game.domain.model.GameCfg
-import com.mortex.composeRocket.game.presentation.components.screen.main.GameState
+import com.mortex.composeRocket.game.domain.game.model.Bullet
+import com.mortex.composeRocket.game.domain.game.model.GameCfg
+import com.mortex.composeRocket.game.domain.game.model.GameState
 
 object ShootIfReady {
     operator fun invoke(state: GameState, now: Long): Pair<List<Bullet>, Long> {

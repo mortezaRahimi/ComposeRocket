@@ -13,7 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mortex.composeRocket.game.presentation.components.screen.login.LoginScreen
-import com.mortex.composeRocket.game.presentation.components.screen.main.RocketScreen
+import com.mortex.composeRocket.game.presentation.components.screen.game.RocketScreen
+import com.mortex.composeRocket.game.presentation.components.screen.menu.GameMenu
 import com.mortex.composeRocket.game.presentation.navigation.Route
 import com.mortex.composeRocket.game.ui.theme.ComposeRocketTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,8 +40,9 @@ class RocketActivity : ComponentActivity() {
                             composable(Route.Auth.path) {
                                 LoginScreen(
                                     onSignedIn = {
-                                        nav.navigate(Route.Game.path) {
-                                            popUpTo(Route.Auth.path) { inclusive = true }
+                                        nav.navigate(Route.Game.path)
+                                        {
+                                            popUpTo(Route.Game.path) { inclusive = true }
                                             launchSingleTop = true
                                         }
                                     },
@@ -48,13 +50,22 @@ class RocketActivity : ComponentActivity() {
                             }
 
                             composable(Route.Game.path) {
-                                RocketScreen()
+                                RocketScreen(onLogout = {
+                                    nav.navigate(Route.Auth.path){
+                                        popUpTo(Route.Auth.path){ inclusive =true}
+                                        launchSingleTop =true
+                                    }
+                                })
+
                             }
+
                         }
                     }
                 }
             }
         }
+
+
     }
 
     override fun onDestroy() {

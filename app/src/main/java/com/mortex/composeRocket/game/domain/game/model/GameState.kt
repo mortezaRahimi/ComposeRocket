@@ -1,9 +1,6 @@
-package com.mortex.composeRocket.game.presentation.components.screen.main
+package com.mortex.composeRocket.game.domain.game.model
 
-import com.mortex.composeRocket.game.domain.model.Bullet
-import com.mortex.composeRocket.game.domain.model.Obstacle
-import com.mortex.composeRocket.game.domain.model.Star
-
+import com.mortex.composeRocket.game.domain.auth.model.AuthUser
 
 data class GameState(
     val width: Int = 0,
@@ -16,6 +13,9 @@ data class GameState(
     val obstacles: List<Obstacle> = emptyList(),
     val score: Int = 0,
     val gameOver: Boolean = false,
+    val isPaused: Boolean = false,
+    val isMenuOpen: Boolean = false,
     val shooting: Boolean = false,
-    val lastShotMs: Long = 0L
+    val lastShotMs: Long = 0L,
+    val user: AuthUser? =null
 )

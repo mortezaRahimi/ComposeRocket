@@ -1,4 +1,4 @@
-package com.mortex.composeRocket.game.domain.model
+package com.mortex.composeRocket.game.domain.game.model
 
 object GameCfg {
     const val FIRE_RATE_MS = 150L

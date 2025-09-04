@@ -1,8 +1,8 @@
-package com.mortex.composeRocket.game.domain.usecase
+package com.mortex.composeRocket.game.domain.game.usecase
 
 import android.graphics.RectF
-import com.mortex.composeRocket.game.domain.model.GameCfg
-import com.mortex.composeRocket.game.domain.model.Obstacle
+import com.mortex.composeRocket.game.domain.game.model.GameCfg
+import com.mortex.composeRocket.game.domain.game.model.Obstacle
 
 object MaybeSpawnObstacle {
     operator fun invoke(obstacles: List<Obstacle>, w: Int, now: Long, obstacleImages: IntArray): List<Obstacle> {

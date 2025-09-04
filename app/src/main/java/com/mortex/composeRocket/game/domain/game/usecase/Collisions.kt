@@ -1,7 +1,7 @@
-package com.mortex.composeRocket.game.domain.usecase
+package com.mortex.composeRocket.game.domain.game.usecase
 
 import android.graphics.RectF
-import com.mortex.composeRocket.game.presentation.components.screen.main.GameState
+import com.mortex.composeRocket.game.domain.game.model.GameState
 
 
 object Collisions {

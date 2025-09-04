@@ -1,4 +1,4 @@
-package com.mortex.composeRocket.game.domain.model
+package com.mortex.composeRocket.game.domain.game.model
 
 import android.graphics.RectF
 import androidx.compose.ui.graphics.ImageBitmap

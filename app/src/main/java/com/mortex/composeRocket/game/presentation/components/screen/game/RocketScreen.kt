@@ -65,7 +65,7 @@ fun RocketScreen(
     val ui by viewModel.state.collectAsState()
 
     // Load images once; ViewModel only exposes drawable IDs
-    val rocketBitmap = ImageBitmap.imageResource(R.drawable.ic_red_rocket)
+    val rocketBitmap = ImageBitmap.imageResource(R.drawable.rocket_transparent)
     val bulletPainter = painterResource(R.drawable.ic_bullet)
     val obstacleBitmaps = mapOf(
         R.drawable.ic_stone to ImageBitmap.imageResource(R.drawable.ic_stone),

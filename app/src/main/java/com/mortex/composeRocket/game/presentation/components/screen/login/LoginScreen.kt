@@ -45,6 +45,7 @@ import com.mortex.composeRocket.R
 import com.mortex.composeRocket.game.domain.auth.AuthFailure
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.jvm.java
 
 @Composable
 fun LoginScreen(

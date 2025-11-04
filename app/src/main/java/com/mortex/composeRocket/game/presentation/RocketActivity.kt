@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mortex.composeRocket.game.presentation.components.screen.login.LoginScreen
 import com.mortex.composeRocket.game.presentation.components.screen.game.RocketScreen
 import com.mortex.composeRocket.game.presentation.components.screen.menu.GameMenu
+import com.mortex.composeRocket.game.presentation.components.screen.splash.SplashScreen
 import com.mortex.composeRocket.game.presentation.navigation.Route
 import com.mortex.composeRocket.game.ui.theme.ComposeRocketTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +37,21 @@ class RocketActivity : ComponentActivity() {
                     ) {
 
                         val nav = rememberNavController()
-                        NavHost(navController = nav, startDestination = Route.Auth.path) {
+                        NavHost(navController = nav, startDestination = Route.Splash.path) {
+
+                            composable(Route.Splash.path) {
+                                SplashScreen(
+                                    onFinished = {
+                                        nav.navigate(Route.Auth.path)
+                                        {
+                                            popUpTo(Route.Splash.path) { inclusive = true }
+                                            launchSingleTop = true
+                                        }
+                                    },
+                                )
+                            }
+
+
                             composable(Route.Auth.path) {
                                 LoginScreen(
                                     onSignedIn = {
@@ -51,9 +66,9 @@ class RocketActivity : ComponentActivity() {
 
                             composable(Route.Game.path) {
                                 RocketScreen(onLogout = {
-                                    nav.navigate(Route.Auth.path){
-                                        popUpTo(Route.Auth.path){ inclusive =true}
-                                        launchSingleTop =true
+                                    nav.navigate(Route.Auth.path) {
+                                        popUpTo(Route.Auth.path) { inclusive = true }
+                                        launchSingleTop = true
                                     }
                                 })
 
